@@ -1,0 +1,307 @@
+rishithreddy@Rishiths-MacBook-Air ~ % mongosh
+Current Mongosh Log ID:	67602b693e20f8dcc710596b
+Connecting to:		mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.6
+Using MongoDB:		8.0.4
+Using Mongosh:		2.3.6
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+
+assignment-1> db.insertOne({name:"ramesh",age:18,salary:300000,skills:[react,mongodb,nextjs],address:{city:nirmal,pincode:504106}})
+ReferenceError: react is not defined
+assignment-1> db.insertOne({name:"ramesh",age:18,salary:300000,skills:['r"eact','mongodb','nextjs'],address:{city:nirmal,pincode:504106}})
+ReferenceError: nirmal is not defined
+assignment-1> db.insertOne({name:"ramesh",age:18,salary:300000,skills:['r"eact','mongodb','nextjs'],address:{city:'nirmal',pincode:504106}})
+TypeError: db.insertOne is not a function
+assignment-1> db.users.insertOne({name:"ramesh",age:18,salary:300000,skills:['r"eact','mongodb','nextjs'],address:{city:'nirmal',pincode:504106}})
+{
+  acknowledged: true,
+  insertedId: ObjectId('676082463e20f8dcc710596c')
+}
+assignment-1> db.users.find()
+[
+  {
+    _id: ObjectId('676082463e20f8dcc710596c'),
+    name: 'ramesh',
+    age: 18,
+    salary: 300000,
+    skills: [ 'r"eact', 'mongodb', 'nextjs' ],
+    address: { city: 'nirmal', pincode: 504106 }
+  }
+]
+assignment-1> db.users.drop()
+true
+assignment-1> db.users.find()
+
+assignment-1> db.createDatabase('users')
+TypeError: db.createDatabase is not a function
+assignment-1> db.createCollection('users')
+{ ok: 1 }
+assignment-1> db.users.insertOne({name:"ramesh",age:18,salary:300000,skills:['react','mongodb','nextjs'],address:{city:'nirmal',pincode:504106}})
+{
+  acknowledged: true,
+  insertedId: ObjectId('676082a73e20f8dcc710596d')
+}
+assignment-1> db.users.find()
+[
+  {
+    _id: ObjectId('676082a73e20f8dcc710596d'),
+    name: 'ramesh',
+    age: 18,
+    salary: 300000,
+    skills: [ 'react', 'mongodb', 'nextjs' ],
+    address: { city: 'nirmal', pincode: 504106 }
+  }
+]
+assignment-1> db.users.insertMany([{name:"ramesh",age:18,salary:300000,skills:['react','mongodb','nextjs'],address:{city:'nirmal',pincode:504106}},
+... {name:"rakesh",age:19,salary:200000,skills:['angular','mongodb','js'],address:{city:'warangal',pincode:504106}},
+... {name:"suresh",age:20,salary:400000,skills:['java','kotlin','flutter'],address:{city:'hyderabad',pincode:500090}}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('676083413e20f8dcc710596e'),
+    '1': ObjectId('676083413e20f8dcc710596f'),
+    '2': ObjectId('676083413e20f8dcc7105970')
+  }
+}
+assignment-1> db.users.find()
+[
+  {
+    _id: ObjectId('676082a73e20f8dcc710596d'),
+    name: 'ramesh',
+    age: 18,
+    salary: 300000,
+    skills: [ 'react', 'mongodb', 'nextjs' ],
+    address: { city: 'nirmal', pincode: 504106 }
+  },
+  {
+    _id: ObjectId('676083413e20f8dcc710596e'),
+    name: 'ramesh',
+    age: 18,
+    salary: 300000,
+    skills: [ 'react', 'mongodb', 'nextjs' ],
+    address: { city: 'nirmal', pincode: 504106 }
+  },
+  {
+    _id: ObjectId('676083413e20f8dcc710596f'),
+    name: 'rakesh',
+    age: 19,
+    salary: 200000,
+    skills: [ 'angular', 'mongodb', 'js' ],
+    address: { city: 'warangal', pincode: 504106 }
+  },
+  {
+    _id: ObjectId('676083413e20f8dcc7105970'),
+    name: 'suresh',
+    age: 20,
+    salary: 400000,
+    skills: [ 'java', 'kotlin', 'flutter' ],
+    address: { city: 'hyderabad', pincode: 500090 }
+  }
+]
+assignment-1> db.users.find(name:"rakesh")
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:18)
+
+> 1 | db.users.find(name:"rakesh")
+    |                   ^
+  2 |
+
+assignment-1> db.users.find({name:"rakesh"})
+[
+  {
+    _id: ObjectId('676083413e20f8dcc710596f'),
+    name: 'rakesh',
+    age: 19,
+    salary: 200000,
+    skills: [ 'angular', 'mongodb', 'js' ],
+    address: { city: 'warangal', pincode: 504106 }
+  }
+]
+assignment-1> db.users.find({"address.city":"hyderabad"})
+[
+  {
+    _id: ObjectId('676083413e20f8dcc7105970'),
+    name: 'suresh',
+    age: 20,
+    salary: 400000,
+    skills: [ 'java', 'kotlin', 'flutter' ],
+    address: { city: 'hyderabad', pincode: 500090 }
+  }
+]
+assignment-1> db.users.find({salary:{$gt:300000}})
+[
+  {
+    _id: ObjectId('676083413e20f8dcc7105970'),
+    name: 'suresh',
+    age: 20,
+    salary: 400000,
+    skills: [ 'java', 'kotlin', 'flutter' ],
+    address: { city: 'hyderabad', pincode: 500090 }
+  }
+]
+assignment-1> db.users.find($and{{age:{$gt:18}},{age:{$lt:20}}})
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:18)
+
+> 1 | db.users.find($and{{age:{$gt:18}},{age:{$lt:20}}})
+    |                   ^
+  2 |
+
+assignment-1> db.users.find({$and{{age:{$gt:18}},{age:{$lt:20}}}})
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:19)
+
+> 1 | db.users.find({$and{{age:{$gt:18}},{age:{$lt:20}}}})
+    |                    ^
+  2 |
+
+assignment-1> db.users.find({$and:[{age:{$gt:18}},{age:{$lt:20}]})
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:49)
+
+> 1 | db.users.find({$and:[{age:{$gt:18}},{age:{$lt:20}]})
+    |                                                  ^
+  2 |
+
+assignment-1> db.users.find({$and:[{age:{$gt:18}},{age:{$lt:20}}]})
+[
+  {
+    _id: ObjectId('676083413e20f8dcc710596f'),
+    name: 'rakesh',
+    age: 19,
+    salary: 200000,
+    skills: [ 'angular', 'mongodb', 'js' ],
+    address: { city: 'warangal', pincode: 504106 }
+  }
+]
+assignment-1> db.users.find({},{names:1})
+[
+  { _id: ObjectId('676082a73e20f8dcc710596d') },
+  { _id: ObjectId('676083413e20f8dcc710596e') },
+  { _id: ObjectId('676083413e20f8dcc710596f') },
+  { _id: ObjectId('676083413e20f8dcc7105970') }
+]
+assignment-1> db.users.find({},{name:1})
+[
+  { _id: ObjectId('676082a73e20f8dcc710596d'), name: 'ramesh' },
+  { _id: ObjectId('676083413e20f8dcc710596e'), name: 'ramesh' },
+  { _id: ObjectId('676083413e20f8dcc710596f'), name: 'rakesh' },
+  { _id: ObjectId('676083413e20f8dcc7105970'), name: 'suresh' }
+]
+assignment-1> db.users.find({},{name:1,_id:0})
+[
+  { name: 'ramesh' },
+  { name: 'ramesh' },
+  { name: 'rakesh' },
+  { name: 'suresh' }
+]
+assignment-1> db.users.find()
+[
+  {
+    _id: ObjectId('676082a73e20f8dcc710596d'),
+    name: 'ramesh',
+    age: 18,
+    salary: 300000,
+    skills: [ 'react', 'mongodb', 'nextjs' ],
+    address: { city: 'nirmal', pincode: 504106 }
+  },
+  {
+    _id: ObjectId('676083413e20f8dcc710596e'),
+    name: 'ramesh',
+    age: 18,
+    salary: 300000,
+    skills: [ 'react', 'mongodb', 'nextjs' ],
+    address: { city: 'nirmal', pincode: 504106 }
+  },
+  {
+    _id: ObjectId('676083413e20f8dcc710596f'),
+    name: 'rakesh',
+    age: 19,
+    salary: 200000,
+    skills: [ 'angular', 'mongodb', 'js' ],
+    address: { city: 'warangal', pincode: 504106 }
+  },
+  {
+    _id: ObjectId('676083413e20f8dcc7105970'),
+    name: 'suresh',
+    age: 20,
+    salary: 400000,
+    skills: [ 'java', 'kotlin', 'flutter' ],
+    address: { city: 'hyderabad', pincode: 500090 }
+  }
+]
+assignment-1> db.users.find({skills:"angular"})
+[
+  {
+    _id: ObjectId('676083413e20f8dcc710596f'),
+    name: 'rakesh',
+    age: 19,
+    salary: 200000,
+    skills: [ 'angular', 'mongodb', 'js' ],
+    address: { city: 'warangal', pincode: 504106 }
+  }
+]
+assignment-1> db.users.find({skills:['angular','mongodb']})
+
+assignment-1> db.users.find({skills:['angular','mongodb','js']})
+[
+  {
+    _id: ObjectId('676083413e20f8dcc710596f'),
+    name: 'rakesh',
+    age: 19,
+    salary: 200000,
+    skills: [ 'angular', 'mongodb', 'js' ],
+    address: { city: 'warangal', pincode: 504106 }
+  }
+]
+assignment-1> db.users.find({skills:{$all:['angular','mongodb',]}})
+[
+  {
+    _id: ObjectId('676083413e20f8dcc710596f'),
+    name: 'rakesh',
+    age: 19,
+    salary: 200000,
+    skills: [ 'angular', 'mongodb', 'js' ],
+    address: { city: 'warangal', pincode: 504106 }
+  }
+]
+assignment-1> db.users.find({skills:{$size:2}})
+
+assignment-1> db.users.find({skills:{$size:3}})
+[
+  {
+    _id: ObjectId('676082a73e20f8dcc710596d'),
+    name: 'ramesh',
+    age: 18,
+    salary: 300000,
+    skills: [ 'react', 'mongodb', 'nextjs' ],
+    address: { city: 'nirmal', pincode: 504106 }
+  },
+  {
+    _id: ObjectId('676083413e20f8dcc710596e'),
+    name: 'ramesh',
+    age: 18,
+    salary: 300000,
+    skills: [ 'react', 'mongodb', 'nextjs' ],
+    address: { city: 'nirmal', pincode: 504106 }
+  },
+  {
+    _id: ObjectId('676083413e20f8dcc710596f'),
+    name: 'rakesh',
+    age: 19,
+    salary: 200000,
+    skills: [ 'angular', 'mongodb', 'js' ],
+    address: { city: 'warangal', pincode: 504106 }
+  },
+  {
+    _id: ObjectId('676083413e20f8dcc7105970'),
+    name: 'suresh',
+    age: 20,
+    salary: 400000,
+    skills: [ 'java', 'kotlin', 'flutter' ],
+    address: { city: 'hyderabad', pincode: 500090 }
+  }
+]
+assignment-1> 

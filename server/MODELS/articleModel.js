@@ -12,7 +12,10 @@ const authorDataSchema = new mongoose.Schema({
     },
     profileImageUrl: {
         type: String,
-
+    },
+    authorId:{
+        type : String,
+        required : true
     }
 }, { "strict": "throw" })
 
@@ -60,7 +63,8 @@ const atricleSchema = new mongoose.Schema({
     comments: [userCommentSchema],
     isArticleActive: {
         type: Boolean,
-        required: true
+        required: true,
+        default : true
     }
 }, { "strict": "throw" })
 

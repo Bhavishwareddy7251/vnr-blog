@@ -18,9 +18,24 @@ authorApp.post("/article",expressAsyncHandler(async(req,res)=>{
     res.status(201).send({message:"article published",payload:newArticle})
 }))
 
+// get Id 
+authorApp.get("/users/id-by-email/:email", expressAsyncHandler(async (req, res) => {
+    const email = req.params.email;
+
+    const user = await userAuthor.findOne({ email: email }, { _id: 1 });
+
+    if (!user) {
+        return res.status(404).send({ message: "User not found" });
+    }
+
+    res.status(200).send({ userId: user._id });
+}));
+
+
 // read all articles
 authorApp.get("/articles",requireAuth({signInUrl:"unauthorized"}),expressAsyncHandler(async(req,res)=>{
     const listOfArticles = await Article.find({isArticleActive:true});
+    console.log(listOfArticles);
     res.status(200).send({message:"articles",payload:listOfArticles})
 }))
 

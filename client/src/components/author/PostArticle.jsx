@@ -8,40 +8,49 @@ function PostArticle() {
   const { register, handleSubmit, formState: { errors } } = useForm()
   const { currentUser } = useContext(userAuthorContextObj)
   const navigate = useNavigate()
-  
-  async function postArticle(articleObj){
-    const authorData = {
-      nameOfAuthor:currentUser.lastName,
-      email:currentUser.email,
-      profileImageUrl:currentUser.profileImageUrl
+
+  async function getuserId() {
+    try {
+      let res = await axios.get(`http://localhost:3003/author-api/users/id-by-email/${currentUser.email}`);
+      return res.data.userId;
+    } catch (error) {
+      console.error("Error fetching user ID:", error.response?.data?.message || error.message);
+      return null;
     }
-    articleObj.authorData = authorData
+  }
+
+  async function postArticle(articleObj){
+    const userId = await getuserId(); // ✅ Await the user ID
+
+    const authorData = {
+      nameOfAuthor: currentUser.lastName,
+      email: currentUser.email,
+      profileImageUrl: currentUser.profileImageUrl,
+      authorId: userId, // ✅ Properly resolved value
+    };
+
+    articleObj.authorData = authorData;
     articleObj.articleId = Date.now();
 
     let currentDate = new Date();
     articleObj.dateOfCreation = currentDate.getDate() + "-"
       + currentDate.getMonth() + "-"
       + currentDate.getFullYear() + " "
-      + currentDate.toLocaleTimeString("en-US", { hour12: true })
+      + currentDate.toLocaleTimeString("en-US", { hour12: true });
 
-    articleObj.dateOfModification = currentDate.getDate() + "-"
-      + currentDate.getMonth() + "-"
-      + currentDate.getFullYear() + " "
-      + currentDate.toLocaleTimeString("en-US", { hour12: true })
-    // await axios.post('',articleObj)
+    articleObj.dateOfModification = articleObj.dateOfCreation;
+    articleObj.comments = [];
+    articleObj.isArticleActive = true;
 
-    articleObj.comments = []
-    articleObj.isArticleActive = true
+    let res = await axios.post('http://localhost:3003/author-api/article', articleObj);
 
-    let res = await axios.post('http://localhost:3003/author-api/article',articleObj)
-    if(res.status === 201){
-      navigate(`/author-profile/${currentUser.email}/articles`)
-    }else{
-      console.log(res)
-      // set Error
+    if (res.status === 201) {
+      navigate(`/author-profile/${currentUser.email}/articles`);
+    } else {
+      console.log(res);
     }
-    console.log(articleObj)
   }
+
 
   return (
     <div className="container ">

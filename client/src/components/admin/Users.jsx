@@ -6,6 +6,7 @@ function Users() {
   const { getToken } = useAuth()
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  
 
   async function fetchUsers() {
     const token = await getToken()
@@ -37,7 +38,7 @@ function Users() {
         }
       });
       fetchUsers()
-      setUsers(users.map(user => user.id === userId ? { ...user, isActive: true } : user));
+      // setUsers(users.map(user => user.id === userId ? { ...user, isActive: true } : user));
     } catch (error) {
       console.error("Error deleting user:", error);
     }
@@ -52,7 +53,7 @@ function Users() {
         }
       });
       fetchUsers()
-      setUsers(users.map(user => user.id === userId ? { ...user, isActive: false } : user));
+      // setUsers(users.map(user => user.id === userId ? { ...user, isActive: false } : user));
     } catch (error) {
       console.error("Error restoring user:", error);
     }

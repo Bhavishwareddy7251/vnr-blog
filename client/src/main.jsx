@@ -15,6 +15,7 @@ import ArticleByID from './components/common/ArticleByID.jsx';
 import PostArticle from './components/author/PostArticle.jsx';
 import UserAuthorContext from './components/contexts/UserAuthorContext.jsx'
 import Users from './components/admin/Users.jsx'
+import Profile from './components/common/Profile.jsx'
 
 
 const browserRouterObj = createBrowserRouter([
@@ -95,6 +96,9 @@ const browserRouterObj = createBrowserRouter([
         ]
       }
     ]
+  },{
+    path : '/profile',
+    element : <Profile />
   }
 ])
 

@@ -21,6 +21,20 @@ userApp.put("/comment/:articleId", expressAsyncHandler(async (req, res) => {
     res.status(200).send({ message: "Comment Added", payload: updatedArticle });
 }));
 
+userApp.get("/check-user", expressAsyncHandler(async (req, res) => {
+  const mail = req.query.email;
+
+  const user = await userAuthor.findOne({ email : mail });
+  // console.log(user);
+  if (user) {
+    // console.log(user.role);
+    res.json({role: user.role, flag : false });  // User exists
+    
+  } else {
+    res.json({flag : true }); // User doesn't exist
+  }
+}));
+
 // Get Comments for an Article
 userApp.get("/comments/:articleId", expressAsyncHandler(async (req, res) => {
     const article = await Article.findOne({ articleId: req.params.articleId });

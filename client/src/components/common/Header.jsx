@@ -24,9 +24,9 @@ function Header() {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       <div className="container">
-        <Link className="navbar-brand" to="/">LOGO</Link>
+        <Link className="navbar-brand" to="/">MGIT BLOGS</Link>
         <button 
-          className="navbar-toggler" 
+          className="navbar-toggler"
           type="button" 
           data-bs-toggle="collapse" 
           data-bs-target="#navbarNav"

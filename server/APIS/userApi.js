@@ -25,7 +25,7 @@ userApp.get("/check-user", expressAsyncHandler(async (req, res) => {
   const mail = req.query.email;
 
   const user = await userAuthor.findOne({ email : mail });
-  // console.log(user);
+  console.log("user: ",user);
   if (user) {
     // console.log(user.role);
     res.json({role: user.role, flag : false });  // User exists

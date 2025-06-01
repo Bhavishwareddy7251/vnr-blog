@@ -13,6 +13,13 @@ function Home() {
   const [newUser, setnewUser] = useState(false);
 
   useEffect(() => {
+    // Check localStorage for saved user data
+    const savedUser = localStorage.getItem("currentUser");
+    if (savedUser) {
+      const parsedUser = JSON.parse(savedUser);
+      setCurrentUser(parsedUser);
+    }
+
     const checkUser = async () => {
       if (isSignedIn && isLoaded) {
         const updatedUser = {
@@ -22,7 +29,6 @@ function Home() {
           email: user.emailAddresses[0].emailAddress,
           profileImageUrl: user.imageUrl,
         };
-        setCurrentUser(updatedUser);
 
         try {
           const res = await axios.get("http://localhost:3003/user-api/check-user", {
@@ -31,14 +37,14 @@ function Home() {
           
           setnewUser(res.data.flag);
           // If user exists, navigate to articles
-          if (!newUser) {
+          if (!res.data.flag) {
             const updated = {
-              ...currentUser,
-              role: res.data.role, // or use updated User.email if needed
+              ...updatedUser,
+              role: res.data.role,
             };
             setCurrentUser(updated);
-            console.log(updated);
-            navigate(`${res.data.role}-profile/${currentUser.email}/articles`);
+            localStorage.setItem("currentUser", JSON.stringify(updated));
+            navigate(`/${res.data.role}-profile/${updated.email}/articles`);
           }
         } catch (error) {
           console.error("Error checking user:", error);
@@ -47,7 +53,7 @@ function Home() {
       }
     };
     checkUser();
-  }, [isSignedIn, isLoaded, user, navigate]);
+  }, [isSignedIn, isLoaded, user]);
 
   async function onSelectRole(e) {
     e.preventDefault();
@@ -64,7 +70,7 @@ function Home() {
           const updatedUser = { ...userWithRole, ...payload };
           setCurrentUser(updatedUser);
           localStorage.setItem("currentUser", JSON.stringify(updatedUser));
-          navigate(`${selectedRole}-profile/:${currentUser.email}/articles`); // Navigate to articles after role selection
+          navigate(`/${selectedRole}-profile/${updatedUser.email}/articles`);
         } else {
           setError(message);
         }

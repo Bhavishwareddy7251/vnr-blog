@@ -33,7 +33,7 @@ adminApp.put("/users/:userId/delete", expressAsyncHandler(async (req, res) => {
     }
 
     // Soft delete all related articles
-    await articleCollection.updateMany(
+    await Article.updateMany(
         { "authorData.authorId": userId },
         { $set: { isArticleActive: false } }
     );
@@ -56,7 +56,7 @@ adminApp.put("/users/:userId/restore", expressAsyncHandler(async (req, res) => {
     }
 
     // Reactivate all related articles
-    await articleCollection.updateMany(
+    await Article.updateMany(
         { "authorData.authorId": userId },
         { $set: { isArticleActive: true } }
     );
@@ -109,11 +109,11 @@ adminApp.post("/make-admin", requireAuth({ signInUrl: "unauthorized" }), express
 
 
 adminApp.get("/unauthorized", (req, res) => {
-    res.send({ message: "Unauthorized request... Please login" });
+    res.status(200).send({ message: "unauthorised request ... plz login", payload: updatedUser });
 });
 
 adminApp.put("/unauthorized", (req, res) => {
-    res.send({ message: "Unauthorized request... Please login" });
+    res.status(200).send({ message: "unauthorised request ... plz login", payload: updatedUser });
 });
 
 module.exports = adminApp;

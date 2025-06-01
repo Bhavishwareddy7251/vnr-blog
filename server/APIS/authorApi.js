@@ -51,11 +51,11 @@ authorApp.get("/article/:articleId", requireAuth({signInUrl:"unauthorized"}), ex
 }));
 
 authorApp.get("/unauthorized",(req,res)=>{
-    res.send({message:"unauthorized request... plz login"})
+    res.status(200).send({ message: "unauthorised request ... plz login", payload: updatedUser });
 })
 
 authorApp.put("/unauthorized",(req,res)=>{
-    res.send({message:"unauthorized request... plz login"})
+    res.status(200).send({ message: "unauthorised request ... plz login", payload: updatedUser });
 })
 
 // update article
